@@ -185,6 +185,28 @@ local function getIcon(id)
 	return sprite
 end
 
+-- 饰品图标（和道具图标同样大小；金饰品染成金色）
+local trinketCache = {}
+local TRINKET_GOLDEN = 32768
+
+local function getTrinketIcon(id)
+	local base = id % TRINKET_GOLDEN
+	local sprite = trinketCache[base]
+	if sprite == nil then
+		sprite = Sprite()
+		sprite:Load("gfx/runhistory_icon.anm2", false)
+		local ok, trinket = pcall(function() return Isaac.GetItemConfig():GetTrinket(base) end)
+		if ok and trinket ~= nil and trinket.GfxFileName ~= nil and trinket.GfxFileName ~= "" then
+			sprite:ReplaceSpritesheet(0, trinket.GfxFileName)
+		end
+		sprite:LoadGraphics()
+		sprite:Play("Idle", true)
+		sprite.Scale = Vector(0.5, 0.5)
+		trinketCache[base] = sprite
+	end
+	return sprite
+end
+
 local function iconRows(count, width)
 	local cols = math.max(1, math.floor(width / ICON))
 	return math.max(1, math.ceil(count / cols))
@@ -481,6 +503,87 @@ local function itemText(id)
 	return "#" .. tostring(id), ""
 end
 
+-- 最终主动道具和饰品：右对齐画在 (right, y) 开始的一行（高 16），最多占 maxW 宽。
+-- 吞下的饰品画成半透明。宽度不够时先去掉文字标签，再去掉多出来的图标。返回是否画了东西
+local LOADOUT_GAP = 8
+
+local function loadoutGroups(run)
+	local groups = {}
+	if type(run.actives) == "table" and #run.actives > 0 then
+		local icons = {}
+		for _, id in ipairs(run.actives) do icons[#icons + 1] = { id = id } end
+		groups[#groups + 1] = { label = T("actives"), icons = icons }
+	end
+	local trinketIcons = {}
+	for _, id in ipairs(type(run.trinkets) == "table" and run.trinkets or {}) do
+		trinketIcons[#trinketIcons + 1] = { id = id, trinket = true }
+	end
+	for _, id in ipairs(type(run.smelted) == "table" and run.smelted or {}) do
+		trinketIcons[#trinketIcons + 1] = { id = id, trinket = true, smelted = true }
+	end
+	if #trinketIcons > 0 then
+		groups[#groups + 1] = { label = T("trinkets"), icons = trinketIcons }
+	end
+	return groups
+end
+
+local function groupsWidth(groups, withLabels)
+	if #groups == 0 then return 0 end
+	local total = (#groups - 1) * LOADOUT_GAP
+	for _, group in ipairs(groups) do
+		total = total + #group.icons * ICON
+		if withLabels then total = total + textWidth(Small, group.label) + 2 end
+	end
+	return total
+end
+
+local function loadoutWidth(run, withLabels)
+	return groupsWidth(loadoutGroups(run), withLabels)
+end
+
+local function drawLoadout(run, right, y, maxW)
+	local groups = loadoutGroups(run)
+	if #groups == 0 then return false end
+	local GAP = LOADOUT_GAP
+	local function width(withLabels) return groupsWidth(groups, withLabels) end
+	local withLabels = width(true) <= maxW
+	-- 实在放不下：从后往前去掉图标
+	local budget = math.max(0, maxW - (#groups - 1) * GAP)
+	if not withLabels and width(false) > maxW then
+		local keep = budget // ICON
+		for _, group in ipairs(groups) do
+			while #group.icons > math.max(0, keep) do table.remove(group.icons) end
+			keep = keep - #group.icons
+		end
+	end
+
+	local x = right - width(withLabels)
+	for _, group in ipairs(groups) do
+		if withLabels then
+			text(Small, group.label, x, y + (ICON - Small.h) / 2, FADED)
+			x = x + textWidth(Small, group.label) + 2
+		end
+		for _, icon in ipairs(group.icons) do
+			local sprite
+			if icon.trinket then
+				sprite = getTrinketIcon(icon.id)
+				local alpha = icon.smelted and 0.5 or 1
+				if icon.id >= TRINKET_GOLDEN then
+					sprite.Color = Color(1, 0.9, 0.45, alpha, 0.25, 0.18, 0)
+				else
+					sprite.Color = Color(1, 1, 1, alpha, 0, 0, 0)
+				end
+			else
+				sprite = getIcon(icon.id)
+			end
+			sprite:Render(Vector(OX + x + 8, OY + y + 8), Vector.Zero, Vector.Zero)
+			x = x + ICON
+		end
+		x = x + GAP
+	end
+	return true
+end
+
 -- 恶魔房 / 天使房在本层的状态：返回 { { sprite, text, color }, ... }
 local function dealLines(floor)
 	local lines = {}
@@ -607,7 +710,7 @@ local function drawList(entries)
 		if killerName ~= nil then
 			local labelStr = T("killedBy") .. ": "
 			local kx = rx + textWidth(Small, labelStr)
-			if icon ~= nil then y = y + 5 end
+			if icon ~= nil then y = y + 3 end
 			text(Small, labelStr, rx, y, FADED)
 			if icon ~= nil then
 				icon[1]:SetFrame("Idle", icon[2])
@@ -615,7 +718,7 @@ local function drawList(entries)
 				kx = kx + BOSS_ICON_W
 			end
 			text(Small, fit(Small, killerName, X1 - kx), kx, y, RED)
-			y = y + Small.step + (icon ~= nil and 6 or 0)
+			y = y + Small.step + (icon ~= nil and 4 or 0)
 		end
 	end
 
@@ -630,8 +733,18 @@ local function drawList(entries)
 	rule(rx, y, rw, 0.25)
 	y = y + 4
 	local items = finalItems(entry)
-	text(Small, (entry.running and T("currentItems") or T("finalItems")) .. " (" .. tostring(#items) .. ")", rx, y, FADED)
-	y = y + Small.step
+	local headerLabel = entry.running and T("currentItems") or T("finalItems")
+	local header = headerLabel .. " (" .. tostring(#items) .. ")"
+	-- 标题同一行的右边：最终的主动道具和饰品（旧版本记录的对局没有这项数据）。
+	-- 放不下"主动 / 饰品"文字时，标题先省掉道具数量
+	if loadoutWidth(run, true) > rw - textWidth(Small, header) - 8 then header = headerLabel end
+	if drawLoadout(run, X1, y, rw - textWidth(Small, header) - 8) then
+		text(Small, header, rx, y + (ICON - Small.h) / 2, FADED)
+		y = y + ICON
+	else
+		text(Small, header, rx, y, FADED)
+		y = y + Small.step
+	end
 	drawIcons(items, rx, y, rw, math.max(1, (CONTENT_BOTTOM - y) // ICON))
 end
 

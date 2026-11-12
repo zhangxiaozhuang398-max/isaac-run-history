@@ -15,6 +15,7 @@ mod.BossIcons = include("rh_boss_icons")
 mod.Names = include("rh_names")
 
 local MAX_ITEMS_PER_FLOOR = 120 -- 防止不停重随道具的角色（如堕化伊甸）把存档撑爆
+local TRINKET_GOLDEN = 32768 -- 金饰品的 ID 标记（TrinketType.TRINKET_GOLDEN_FLAG）
 
 -- 存档内容：runs = 已结束的对局（新的在前），current = 正在进行的对局
 mod.Data = { version = 1, runs = {} }
@@ -178,6 +179,31 @@ local function captureStats(run)
 		}
 	end)
 	if ok then run.stats = stats end
+
+	-- 主动道具（主槽、学生书包副槽、口袋主动）和饰品（手持的；金饰品带 32768 标记），以及吞下去的饰品
+	local okLoadout, actives, trinkets, smelted = pcall(function()
+		local actives, trinkets, smelted, held = {}, {}, {}, {}
+		for _, slot in ipairs({ ActiveSlot.SLOT_PRIMARY, ActiveSlot.SLOT_SECONDARY, ActiveSlot.SLOT_POCKET }) do
+			local id = player:GetActiveItem(slot)
+			if id ~= nil and id > 0 then actives[#actives + 1] = id end
+		end
+		for i = 0, 1 do
+			local id = player:GetTrinket(i)
+			if id ~= nil and id > 0 then
+				trinkets[#trinkets + 1] = id
+				held[id & (TRINKET_GOLDEN - 1)] = true
+			end
+		end
+		local maxId = Isaac.GetItemConfig():GetTrinkets().Size - 1
+		for id = 1, maxId do
+			if not held[id] and player:HasTrinket(id, true) then smelted[#smelted + 1] = id end
+		end
+		return actives, trinkets, smelted
+	end)
+	if okLoadout then
+		run.actives, run.trinkets = actives, trinkets
+		run.smelted = (#smelted > 0) and smelted or nil
+	end
 end
 
 -- 记录本层的恶魔房 / 天使房：1 = 出现了（门开了），2 = 进去过

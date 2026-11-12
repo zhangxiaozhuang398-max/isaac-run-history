@@ -10,6 +10,7 @@ A mod for *The Binding of Isaac: Repentance* that records your last 20 runs and 
 
 - 角色、种子、难度、结果（胜利 / 死亡 / 放弃）、用时
 - 最终道具
+- 最后拿着的主动道具（包括学生书包副槽、口袋主动）和饰品（金饰品显示为金色，吞下的饰品显示为半透明）
 - 最终属性：移速、射速、伤害、射程、弹速、运气
 - 最后击败的 Boss
 - 死因（死亡的对局）：被哪个敌人 / Boss 杀死，或尖刺、诅咒房门、自伤等，带游戏死亡画面里的头像
@@ -76,7 +77,8 @@ The Binding of Isaac Rebirth/mods/run history/
 - 没装 REPENTOGON 时，游戏不向 mod 提供系统时间，对局日期为空。
 - 贪婪模式不记录每层的波次 Boss，只记录最后的究极贪婪。
 - 用手柄时，按键提示仍然显示键盘按键。
-- 旧版本 mod 记录的对局缺少后来才加入的数据（属性、每层用时、金币、死因等），对应位置显示为空。
+- 旧版本 mod 记录的对局缺少后来才加入的数据（属性、每层用时、金币、死因、主动和饰品等），对应位置显示为空。
+- 属性、主动道具和饰品只记录 1 号角色（雅各和以扫只记录雅各）。
 - 死因按角色最后一次受到的伤害判断；其他 mod 添加的敌人没有头像，名字需要装有 EID 才能显示。
 - 界面有中文和英文；其他语言的游戏会显示英文。
 
@@ -105,7 +107,7 @@ The Binding of Isaac Rebirth/data/run history/save1.dat
 
 ## English summary
 
-Records the last 20 runs per save slot: character, seed, result, time, final items and stats, what killed you, and for every floor the items picked up, bosses defeated, time spent, coins / bombs / keys when leaving, and whether a devil or angel room appeared and was entered.
+Records the last 20 runs per save slot: character, seed, result, time, final items and stats, the active items and trinkets you ended with, what killed you, and for every floor the items picked up, bosses defeated, time spent, coins / bombs / keys when leaving, and whether a devil or angel room appeared and was entered.
 
 - Press `F2` during a run to open the history. In the floor view, press `Space` to browse items and see their names.
 - With [REPENTOGON](https://github.com/TeamREPENTOGON/REPENTOGON) installed, a "Run History" note also appears in the main menu's Stats screen.
