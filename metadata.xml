@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+    <name>Run History</name>
+    <directory>run history</directory>
+    <description>Records your last 20 runs (seed, character, final items, bosses defeated, and a floor-by-floor breakdown). Press F2 in a run to open the history. With REPENTOGON installed, a "Run History" note also appears in the main menu's Stats screen.
+
+记录最近 20 局对局：种子、角色、最终道具、击败的 Boss，以及每一层获得的道具和击败的关底 Boss。在对局中按 F2 打开；装有 REPENTOGON 时，主菜单“统计数据”里还会多出一张“对局记录”便签。</description>
+    <version>1.1</version>
+    <visibility/>
+</metadata>
