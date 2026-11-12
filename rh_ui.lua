@@ -101,6 +101,10 @@ local statIcon = loadSprite("gfx/ui/hudstats2.anm2")
 local pickupIcon = loadSprite("gfx/ui/hudpickups.anm2")
 local bossIcon = loadSprite("gfx/runhistory_boss.anm2")
 bossIcon.Scale = Vector(0.5, 0.5)
+-- 游戏死亡画面里"致死者"用的敌人头像
+local enemyIcon = loadSprite("gfx/runhistory_enemy.anm2")
+enemyIcon.Scale = Vector(0.5, 0.5)
+local BOSS_PORTRAITS, ENEMY_PORTRAITS = 147, 417
 local devilIcon = Sprite()
 devilIcon:Load("gfx/ui/minimap_icons.anm2", true)
 devilIcon:Play("IconDevilRoom", true)
@@ -348,7 +352,7 @@ local function drawKey(key, x, y)
 	end
 end
 
--- 提示内容：{ { keys = {...}, label = "..." }, ... }，整体右对齐到 (right, y)，y 是文字顶端
+-- 提示内容：{ { keys = {...}, label = "..." }, ... }，整体右对齐到 (right, y)，y 是文字顶端。返回最左边的 x
 local function drawHints(hints, right, y)
 	local total = 0
 	for i, hint in ipairs(hints) do
@@ -357,6 +361,7 @@ local function drawHints(hints, right, y)
 		if i < #hints then total = total + 10 end
 	end
 	local x = right - total
+	local left = x
 	for _, hint in ipairs(hints) do
 		for _, key in ipairs(hint.keys) do
 			drawKey(key, x, y - 2)
@@ -366,6 +371,7 @@ local function drawHints(hints, right, y)
 		text(Small, hint.label, x, y, FADED)
 		x = x + textWidth(Small, hint.label) + 10
 	end
+	return left
 end
 
 local function hintsFor(view)
@@ -380,9 +386,16 @@ local function hintsFor(view)
 			{ keys = { menu and "ESC" or keyName() }, label = T("hClose") },
 		}
 	end
+	if view == "items" then
+		return {
+			{ keys = { "up", "down", "left", "right" }, label = T("hSelect") },
+			{ keys = { backKey }, label = T("hBack") },
+		}
+	end
 	return {
 		{ keys = { "up", "down" }, label = T("hScroll") },
 		{ keys = { "left", "right" }, label = T("hSwitch") },
+		{ keys = { confirmKey }, label = T("hItems") },
 		{ keys = { backKey }, label = T("hBack") },
 	}
 end
@@ -421,6 +434,51 @@ local function drawBossIcon(boss, x, y)
 	bossIcon:SetFrame("Idle", frame)
 	bossIcon:Render(Vector(OX + x, OY + y), Vector.Zero, Vector.Zero)
 	return true
+end
+
+-- 死因：返回 显示名, 头像（{ sprite, 帧 } 或 nil）
+local function killerInfo(killer)
+	if type(killer) ~= "string" or killer == "" then return nil end
+	if killer:sub(1, 1) == "@" then
+		return T("k_" .. killer:sub(2)), nil
+	end
+	local entities = mod.NamesData and mod.NamesData.entities or {}
+	local data = entities[killer] or entities[(killer:match("^(%d+)%.") or "") .. ".0"]
+	if data ~= nil then
+		local name = (lang == "zh") and data[2] or data[1]
+		local portrait = tonumber(data[3]) or -1
+		local icon
+		if portrait >= 0 then
+			-- 和死亡画面一样：Boss 用 Boss 头像表，其余（包括 Boss 发射出来的东西）用敌人头像表
+			if data[4] == 1 and portrait < BOSS_PORTRAITS then
+				icon = { bossIcon, portrait }
+			elseif portrait < ENEMY_PORTRAITS then
+				icon = { enemyIcon, portrait }
+			end
+		end
+		return name, icon
+	end
+	-- 其他 mod 的敌人：有 EID 的话借用它的实体名称表
+	if EID ~= nil and type(EID.XMLEntityNames) == "table" and EID.XMLEntityNames[killer] ~= nil then
+		return EID.XMLEntityNames[killer], nil
+	end
+	return T("unknownEnemy"), nil
+end
+
+-- 道具名称和拾取说明（官方中英文；其他 mod 的道具用道具配置里的名字）
+local function itemText(id)
+	local pair = Names.Items and Names.Items[id]
+	if pair ~= nil then
+		if lang == "zh" then return pair[2], pair[4] or "" end
+		return pair[1], pair[3] or ""
+	end
+	local ok, config = pcall(function() return Isaac.GetItemConfig():GetCollectible(id) end)
+	if ok and config ~= nil and type(config.Name) == "string" and config.Name ~= "" and config.Name:sub(1, 1) ~= "#" then
+		local desc = type(config.Description) == "string" and config.Description or ""
+		if desc:sub(1, 1) == "#" then desc = "" end
+		return config.Name, desc
+	end
+	return "#" .. tostring(id), ""
 end
 
 -- 恶魔房 / 天使房在本层的状态：返回 { { sprite, text, color }, ... }
@@ -543,6 +601,24 @@ local function drawList(entries)
 		textRight(Small, run.date, X1, y - Small.step, FADED)
 	end
 
+	-- 死因（只有死亡的对局才有；旧版本记录的对局没有这项数据）
+	if run.result == "death" and run.killer ~= nil then
+		local killerName, icon = killerInfo(run.killer)
+		if killerName ~= nil then
+			local labelStr = T("killedBy") .. ": "
+			local kx = rx + textWidth(Small, labelStr)
+			if icon ~= nil then y = y + 5 end
+			text(Small, labelStr, rx, y, FADED)
+			if icon ~= nil then
+				icon[1]:SetFrame("Idle", icon[2])
+				icon[1]:Render(Vector(OX + kx - 2, OY + y - 7), Vector.Zero, Vector.Zero)
+				kx = kx + BOSS_ICON_W
+			end
+			text(Small, fit(Small, killerName, X1 - kx), kx, y, RED)
+			y = y + Small.step + (icon ~= nil and 6 or 0)
+		end
+	end
+
 	-- 最终属性（旧版本记录的对局没有这项数据）
 	if type(run.stats) == "table" then
 		y = y + 2
@@ -584,7 +660,7 @@ local function drawDetail(entries)
 	local bx = X1 - textWidth(Small, timeStr) - 12 - textWidth(Small, bossStr)
 	text(Small, bossStr, bx, y, RED)
 	textRight(Small, bossLabel, bx, y, FADED)
-	drawHints(hintsFor("detail"), X1, HINT_Y)
+	local hintLeft = drawHints(hintsFor(UI.itemMode and "items" or "detail"), X1, HINT_Y)
 
 	-- 三列：楼层 | 获得道具 | 击败 Boss
 	local floorX, floorW = X0, 88
@@ -666,8 +742,47 @@ local function drawDetail(entries)
 		maxTop = maxTop - 1
 		used = used + blocks[maxTop].height
 	end
-	if UI.detailTop > maxTop then UI.detailTop = maxTop end
+	-- 每块里能选中的道具数（和 drawIcons 一样：放不下时最后两格显示 "+N"）
+	local cols = math.max(1, math.floor(itemW / ICON))
+	local shown = {}
+	for b, block in ipairs(blocks) do
+		local capacity = cols * math.max(1, block.rows)
+		local count = #block.items
+		shown[b] = (count > capacity) and math.max(0, capacity - 2) or count
+	end
+	UI.layout = { cols = cols, shown = shown }
+
+	-- 道具选择模式：保证选中的道具所在的块在屏幕内
+	local sel = UI.itemMode and UI.itemSel or nil
+	if sel ~= nil then
+		if sel.b > #blocks or (shown[sel.b] or 0) == 0 then
+			UI.itemMode, sel = false, nil
+		else
+			sel.k = math.max(1, math.min(sel.k, shown[sel.b]))
+			if sel.b < UI.detailTop then UI.detailTop = sel.b end
+			local function spanHeight()
+				local h = 0
+				for i = UI.detailTop, sel.b do h = h + blocks[i].height end
+				return h
+			end
+			while UI.detailTop < sel.b and spanHeight() > CONTENT_BOTTOM - top + 1 do
+				UI.detailTop = UI.detailTop + 1
+			end
+		end
+	end
+	if UI.detailTop > maxTop and sel == nil then UI.detailTop = maxTop end
 	if UI.detailTop < 1 then UI.detailTop = 1 end
+
+	-- 道具选择模式：底部左边显示选中道具的名字和拾取说明
+	if sel ~= nil then
+		local name, desc = itemText(blocks[sel.b].items[sel.k])
+		local width = hintLeft - X0 - 10
+		text(Small, fit(Small, name, width), X0, HINT_Y, INK)
+		local nameW = textWidth(Small, name)
+		if desc ~= "" and nameW + 20 < width then
+			text(Small, fit(Small, desc, width - nameW - 8), X0 + nameW + 8, HINT_Y, FADED)
+		end
+	end
 
 	y = top
 	for i = UI.detailTop, #blocks do
@@ -691,6 +806,15 @@ local function drawDetail(entries)
 			end
 		end
 		drawIcons(block.items, itemX, y, itemW, block.rows)
+		-- 选中的道具：画一个墨水方框
+		if sel ~= nil and sel.b == i then
+			local bx0 = itemX + ((sel.k - 1) % cols) * ICON - 1
+			local by0 = y + ((sel.k - 1) // cols) * ICON - 1
+			rect(bx0, by0, ICON + 2, 1, 0.21, 0.17, 0.17, 0.9)
+			rect(bx0, by0 + ICON + 1, ICON + 2, 1, 0.21, 0.17, 0.17, 0.9)
+			rect(bx0, by0, 1, ICON + 2, 0.21, 0.17, 0.17, 0.9)
+			rect(bx0 + ICON + 1, by0, 1, ICON + 2, 0.21, 0.17, 0.17, 0.9)
+		end
 		-- 本层结束时的金币 / 炸弹 / 钥匙（旧记录没有这项数据）
 		if block.floor ~= nil and block.floor.coins ~= nil then
 			for j, entry in ipairs(PICKUP_ORDER) do
@@ -729,6 +853,88 @@ end
 -- 打开 / 关闭 / 每帧更新
 ----------------------------------------------------------------------
 
+-- 道具选择模式：在详情页里用方向键逐个选道具，底部显示名字
+UI.itemMode = false
+UI.itemSel = nil
+UI.layout = nil
+
+local function enterItemMode()
+	local layout = UI.layout
+	if layout == nil then return end
+	-- 从当前屏幕上第一个有道具的块开始
+	local first
+	for b = UI.detailTop, #layout.shown do
+		if layout.shown[b] > 0 then first = b break end
+	end
+	if first == nil then
+		for b = 1, #layout.shown do
+			if layout.shown[b] > 0 then first = b break end
+		end
+	end
+	if first == nil then return end
+	UI.itemMode = true
+	UI.itemSel = { b = first, k = 1 }
+	playSound(SoundEffect.SOUND_MENU_SCROLL)
+end
+
+local function itemModeInput(input)
+	local layout, sel = UI.layout, UI.itemSel
+	if layout == nil or sel == nil then
+		UI.itemMode = false
+		return
+	end
+	if input("back", false) or input("confirm", false) then
+		UI.itemMode = false
+		playSound(SoundEffect.SOUND_MENU_SCROLL)
+		return
+	end
+	local cols, shown = layout.cols, layout.shown
+	local function count(b) return shown[b] or 0 end
+	local function prevBlock(b)
+		for i = b - 1, 1, -1 do if count(i) > 0 then return i end end
+	end
+	local function nextBlock(b)
+		for i = b + 1, #shown do if count(i) > 0 then return i end end
+	end
+	local oldB, oldK = sel.b, sel.k
+	local col = (sel.k - 1) % cols
+	if input("left", true) then
+		if sel.k > 1 then
+			sel.k = sel.k - 1
+		else
+			local p = prevBlock(sel.b)
+			if p then sel.b, sel.k = p, count(p) end
+		end
+	elseif input("right", true) then
+		if sel.k < count(sel.b) then
+			sel.k = sel.k + 1
+		else
+			local n = nextBlock(sel.b)
+			if n then sel.b, sel.k = n, 1 end
+		end
+	elseif input("up", true) then
+		if sel.k - cols >= 1 then
+			sel.k = sel.k - cols
+		else
+			local p = prevBlock(sel.b)
+			if p then
+				local lastRowStart = ((count(p) - 1) // cols) * cols
+				sel.b, sel.k = p, math.min(count(p), lastRowStart + col + 1)
+			end
+		end
+	elseif input("down", true) then
+		if (sel.k - 1) // cols < (count(sel.b) - 1) // cols then
+			sel.k = math.min(count(sel.b), sel.k + cols)
+		else
+			local n = nextBlock(sel.b)
+			if n then sel.b, sel.k = n, math.min(count(n), col + 1) end
+		end
+	end
+	if sel.b ~= oldB or sel.k ~= oldK then
+		playSound(SoundEffect.SOUND_MENU_SCROLL)
+	end
+end
+
 function UI.Open(mode)
 	init()
 	UI.mode = mode or "run"
@@ -736,6 +942,7 @@ function UI.Open(mode)
 	UI.closing = false
 	UI.anim = 0
 	UI.view = "list"
+	UI.itemMode = false
 	UI.sel = 1
 	UI.listTop = 1
 	UI.detailTop = 1
@@ -753,6 +960,7 @@ end
 -- 立即关闭（切换场景时用）
 function UI.ForceClose()
 	UI.open = false
+	UI.itemMode = false
 	UI.closing = false
 	UI.anim = 0
 end
@@ -804,6 +1012,8 @@ function UI.Frame(ox, oy, input)
 			elseif input("back", false) then
 				UI.Close()
 			end
+		elseif UI.itemMode then
+			itemModeInput(input)
 		else
 			if input("up", true) then UI.detailTop = UI.detailTop - 1 end
 			if input("down", true) then UI.detailTop = UI.detailTop + 1 end
@@ -817,7 +1027,9 @@ function UI.Frame(ox, oy, input)
 				UI.detailTop = 1
 				playSound(SoundEffect.SOUND_MENU_SCROLL)
 			end
-			if input("back", false) then
+			if input("confirm", false) then
+				enterItemMode()
+			elseif input("back", false) then
 				UI.view = "list"
 				playSound(SoundEffect.SOUND_PAPER_OUT)
 			end

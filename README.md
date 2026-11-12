@@ -12,6 +12,7 @@ A mod for *The Binding of Isaac: Repentance* that records your last 20 runs and 
 - 最终道具
 - 最终属性：移速、射速、伤害、射程、弹速、运气
 - 最后击败的 Boss
+- 死因（死亡的对局）：被哪个敌人 / Boss 杀死，或尖刺、诅咒房门、自伤等，带游戏死亡画面里的头像
 
 **每层记录**
 
@@ -35,7 +36,7 @@ A mod for *The Binding of Isaac: Repentance* that records your last 20 runs and 
 页面内的操作：
 
 - `↑` `↓` 选择对局 / 滚动楼层
-- `空格` 查看详情
+- `空格` 查看详情；在详情页再按 `空格` 进入道具选择，用方向键逐个查看道具的官方名称和拾取说明
 - `←` `→` 在详情页切换对局
 - 主菜单里 `ESC` 返回；对局内用 `退格键` 返回、`F2` 关闭（对局内按 ESC 会暂停游戏）
 
@@ -71,11 +72,12 @@ The Binding of Isaac Rebirth/mods/run history/
 
 ## 已知限制
 
-- 道具只显示图标，不显示名字。
+- 道具数量超过一屏能放下的格数时，多出来的道具显示为 "+N"，无法选中查看名字。
 - 没装 REPENTOGON 时，游戏不向 mod 提供系统时间，对局日期为空。
 - 贪婪模式不记录每层的波次 Boss，只记录最后的究极贪婪。
 - 用手柄时，按键提示仍然显示键盘按键。
-- 旧版本 mod 记录的对局缺少后来才加入的数据（属性、每层用时、金币等），对应位置显示为空。
+- 旧版本 mod 记录的对局缺少后来才加入的数据（属性、每层用时、金币、死因等），对应位置显示为空。
+- 死因按角色最后一次受到的伤害判断；其他 mod 添加的敌人没有头像，名字需要装有 EID 才能显示。
 - 界面有中文和英文；其他语言的游戏会显示英文。
 
 ## 数据存在哪
@@ -103,9 +105,9 @@ The Binding of Isaac Rebirth/data/run history/save1.dat
 
 ## English summary
 
-Records the last 20 runs per save slot: character, seed, result, time, final items and stats, and for every floor the items picked up, bosses defeated, time spent, coins / bombs / keys when leaving, and whether a devil or angel room appeared and was entered.
+Records the last 20 runs per save slot: character, seed, result, time, final items and stats, what killed you, and for every floor the items picked up, bosses defeated, time spent, coins / bombs / keys when leaving, and whether a devil or angel room appeared and was entered.
 
-- Press `F2` during a run to open the history.
+- Press `F2` during a run to open the history. In the floor view, press `Space` to browse items and see their names.
 - With [REPENTOGON](https://github.com/TeamREPENTOGON/REPENTOGON) installed, a "Run History" note also appears in the main menu's Stats screen.
 - Developed and tested on Repentance v1.7.9b with REPENTOGON 1.0.12e; not tested on Repentance+.
 - Install by copying this folder to `mods/run history/` in the game directory. Settings are in `rh_config.lua`.

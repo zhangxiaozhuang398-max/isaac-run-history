@@ -352,6 +352,10 @@ local function finalizeRun(result, stale)
 	end
 
 	run.result = result
+	if result == "death" then
+		run.killer = run.lastHit
+	end
+	run.lastHit = nil
 	run.finalItems = buildFinalItems(run)
 	run.snap = nil
 	run.active = nil
@@ -378,6 +382,87 @@ local function finalizeRun(result, stale)
 	mod.Data.current = nil
 	mod:SaveHistory()
 end
+
+----------------------------------------------------------------------
+-- 死因：记录角色最后一次受到的伤害来自哪里
+----------------------------------------------------------------------
+
+-- 由别的实体发射 / 产生的伤害源（泪弹、炸弹、激光、敌方子弹、地面效果），要追溯到发射者
+local SPAWNED_SOURCES = {
+	[EntityType.ENTITY_TEAR] = true,
+	[EntityType.ENTITY_BOMBDROP] = true,
+	[EntityType.ENTITY_LASER] = true,
+	[EntityType.ENTITY_KNIFE] = true,
+	[EntityType.ENTITY_PROJECTILE] = true,
+	[EntityType.ENTITY_EFFECT] = true,
+}
+
+-- 没有具体实体时，按伤害类型归类（顺序即优先级）
+local HAZARD_FLAGS = {
+	{ DamageFlag.DAMAGE_CURSED_DOOR, "@curseDoor" },
+	{ DamageFlag.DAMAGE_SPIKES, "@spikes" },
+	{ DamageFlag.DAMAGE_CHEST, "@spikedChest" },
+	{ DamageFlag.DAMAGE_PITFALL, "@pit" },
+	{ DamageFlag.DAMAGE_IV_BAG, "@self" },
+	{ DamageFlag.DAMAGE_DEVIL, "@self" },
+	{ DamageFlag.DAMAGE_RED_HEARTS, "@self" },
+	{ DamageFlag.DAMAGE_TNT, "@explosion" },
+	{ DamageFlag.DAMAGE_EXPLOSION, "@explosion" },
+	{ DamageFlag.DAMAGE_FIRE, "@fire" },
+	{ DamageFlag.DAMAGE_POOP, "@poop" },
+	{ DamageFlag.DAMAGE_CRUSH, "@crush" },
+	{ DamageFlag.DAMAGE_TIMER, "@timer" },
+}
+
+local function hazardFromFlags(flags)
+	for _, entry in ipairs(HAZARD_FLAGS) do
+		if flags & entry[1] ~= 0 then return entry[2] end
+	end
+	return nil
+end
+
+-- 返回 "类型.变种"（某个实体）或 "@xxx"（陷阱 / 自伤等），无法判断时返回 nil
+local function resolveKiller(flags, source)
+	local sourceType = source and source.Type or 0
+	local t, v = sourceType, source and source.Variant or 0
+	-- 献血机、恶魔乞丐等机器：直接记机器本身
+	if t == EntityType.ENTITY_SLOT then
+		return tostring(t) .. "." .. tostring(v)
+	end
+	-- 诅咒房门、尖刺、自伤类道具：伤害类型比来源实体更能说明问题
+	local hazard = hazardFromFlags(flags)
+	if hazard == "@curseDoor" or hazard == "@spikes" or hazard == "@spikedChest" or hazard == "@pit" or hazard == "@self" then
+		return hazard
+	end
+	if SPAWNED_SOURCES[t] then
+		local spawnerType = source.SpawnerType or 0
+		if spawnerType == EntityType.ENTITY_PLAYER then
+			return (t == EntityType.ENTITY_BOMBDROP) and "@ownBomb" or "@self"
+		elseif spawnerType > 0 then
+			t, v = spawnerType, source.SpawnerVariant or 0
+		elseif t == EntityType.ENTITY_BOMBDROP then
+			return "4." .. tostring(v) -- 即爆炸弹等没有发射者的炸弹
+		else
+			t = 0
+		end
+	end
+	if t == EntityType.ENTITY_PLAYER then return "@self" end
+	if t > 0 then return tostring(t) .. "." .. tostring(v) end
+	return hazard
+end
+
+function mod:OnPlayerDamage(entity, amount, flags, source)
+	local run = mod.Data.current
+	if not mod.InRun or run == nil then return end
+	flags = flags or 0
+	-- 不会致死的伤害和"假伤害"不算
+	if flags & (DamageFlag.DAMAGE_NOKILL | DamageFlag.DAMAGE_FAKE) ~= 0 then return end
+	local ok, killer = pcall(resolveKiller, flags, source)
+	if ok and killer ~= nil then
+		run.lastHit = killer
+	end
+end
+mod:AddCallback(ModCallbacks.MC_ENTITY_TAKE_DMG, mod.OnPlayerDamage, EntityType.ENTITY_PLAYER)
 
 -- 记录本层击败的一个 Boss
 local function recordBoss(boss)
