@@ -737,8 +737,16 @@ local function drawList(entries)
 	local header = headerLabel .. " (" .. tostring(#items) .. ")"
 	-- 标题同一行的右边：最终的主动道具和饰品（旧版本记录的对局没有这项数据）。
 	-- 放不下"主动 / 饰品"文字时，标题先省掉道具数量
-	if loadoutWidth(run, true) > rw - textWidth(Small, header) - 8 then header = headerLabel end
-	if drawLoadout(run, X1, y, rw - textWidth(Small, header) - 8) then
+	local needW = loadoutWidth(run, true)
+	if needW > rw - textWidth(Small, header) - 8 then header = headerLabel end
+	if needW > rw - textWidth(Small, header) - 8 then
+		-- 还是放不下（英文标签更宽、饰品很多）：主动和饰品单独占一行，标题照常写在下面
+		drawLoadout(run, rx + math.min(needW, rw), y, rw)
+		y = y + ICON + 2
+		header = headerLabel .. " (" .. tostring(#items) .. ")"
+		text(Small, header, rx, y, FADED)
+		y = y + Small.step
+	elseif drawLoadout(run, X1, y, rw - textWidth(Small, header) - 8) then
 		text(Small, header, rx, y + (ICON - Small.h) / 2, FADED)
 		y = y + ICON
 	else

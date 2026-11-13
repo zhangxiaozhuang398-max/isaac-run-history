@@ -2,9 +2,77 @@
 <metadata>
     <name>Run History</name>
     <directory>run history</directory>
-    <description>Records your last 20 runs (seed, character, final items, bosses defeated, and a floor-by-floor breakdown). Press F2 in a run to open the history. With REPENTOGON installed, a "Run History" note also appears in the main menu's Stats screen.
+    <description>[h1]Run History / 对局记录[/h1]
+Records your last 20 runs and shows them on a page styled like the game's own paper menus. (中文说明在下面)
 
-记录最近 20 局对局：种子、角色、最终道具、击败的 Boss，以及每一层获得的道具和击败的关底 Boss。在对局中按 F2 打开；装有 REPENTOGON 时，主菜单“统计数据”里还会多出一张“对局记录”便签。</description>
-    <version>1.1</version>
-    <visibility/>
+[h2]What it records[/h2]
+[b]Every run[/b]
+[list]
+[*]Character, seed, difficulty, result (win / death / quit), run time
+[*]Final items, final active items and trinkets, final stats
+[*]The last boss you beat
+[*]What killed you (enemy or boss with its death-screen portrait, or spikes, curse doors, self-damage...)
+[/list]
+[b]Every floor[/b]
+[list]
+[*]Items picked up, bosses beaten (with icons), time spent
+[*]Coins, bombs and keys when you left the floor
+[*]Whether a devil / angel room appeared and whether you went in
+[/list]
+
+[h2]How to open[/h2]
+[list]
+[*]During a run: press [b]F2[/b] (change it in rh_config.lua)
+[*]Main menu: with [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] installed, a "Run History" note appears in the Stats screen. Without REPENTOGON everything else still works.
+[*]In the floor view, press [b]Space[/b] to browse items and see their names and pickup text.
+[/list]
+
+[h2]Compatibility[/h2]
+[list]
+[*]Made and tested on [b]Repentance v1.7.9b[/b]. [b]Not tested on Repentance+.[/b]
+[*]The main-menu entry was tested with REPENTOGON 1.0.12e (the last version for v1.7.9b).
+[*]English and Chinese UI; other languages show English.
+[/list]
+
+[h2]Notes[/h2]
+[list]
+[*]History is saved per save slot in data/run history/ and is not synced by Steam Cloud.
+[*]Opening the page during a run stops your character, but enemies keep moving. Open it in a cleared room.
+[*]Stats, active items and trinkets are recorded for player 1 only.
+[*]Greed mode records only the final Ultra Greed, not the wave bosses.
+[*]Enemies from other mods have no portrait; their names need External Item Descriptions.
+[/list]
+
+[h1]对局记录[/h1]
+自动记录最近 20 局对局，用游戏自己的纸张菜单风格显示。
+
+[h2]记录内容[/h2]
+[b]每局[/b]：角色、种子、难度、结果（胜利 / 死亡 / 放弃）、用时；最终道具、最后的主动道具和饰品、最终属性；最后击败的 Boss；死因（敌人或 Boss 的死亡画面头像，或尖刺、诅咒房门、自伤等）。
+[b]每层[/b]：获得的道具、击败的 Boss（带图标）、本层用时、离开时的金币 / 炸弹 / 钥匙、恶魔房 / 天使房是否出现、是否进入。
+
+[h2]怎么打开[/h2]
+[list]
+[*]对局中按 [b]F2[/b]（可在 rh_config.lua 里修改）
+[*]装有 [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] 时，主菜单"统计数据"里会多出一张"对局记录"便签；没装也不影响其他功能
+[*]在楼层详情页按 [b]空格[/b] 逐个查看道具的官方名称和拾取说明
+[/list]
+
+[h2]适用版本[/h2]
+[list]
+[*]在 [b]忏悔 v1.7.9b[/b] 上开发和测试，[b]没有在忏悔+ 上测试过[/b]
+[*]菜单入口在 REPENTOGON 1.0.12e（支持 v1.7.9b 的最后一个版本）上测试
+[/list]
+
+[h2]说明[/h2]
+[list]
+[*]记录按存档槽分开保存在 data/run history/，不走 Steam 云同步
+[*]对局内打开页面时角色不会动，但敌人不会暂停，建议在清完的房间里看
+[*]属性、主动和饰品只记录 1 号角色
+[*]贪婪模式只记录最后的究极贪婪，不记录每波的 Boss
+[*]其他 mod 加的敌人没有头像，名字需要装 EID 才能显示
+[/list]</description>
+    <version>1.5</version>
+    <visibility>Public</visibility>
+    <tag id="Lua"/>
+    <tag id="Tweaks"/>
 </metadata>
