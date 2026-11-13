@@ -22,20 +22,20 @@ Records your last 20 runs and shows them on a page styled like the game's own pa
 
 [h2]How to install REPENTOGON 1.0.12e[/h2]
 [olist]
-[*]Open the [url=https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e]REPENTOGON 1.0.12e release page[/url]. Under "Assets", download [b]REPENTOGON.zip[/b].
+[*]Open the [url=https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e]REPENTOGON 1.0.12e release page[/url]. Under &quot;Assets&quot;, download [b]REPENTOGON.zip[/b].
 [*]Open the game folder: in your Steam Library, right-click [i]The Binding of Isaac: Rebirth[/i] → Manage → Browse local files. It is the folder that contains [b]isaac-ng.exe[/b].
 [*]Extract [b]everything[/b] in REPENTOGON.zip into that folder. If Windows asks about replacing files, choose replace.
 [*]Start the game from Steam. On the first start a REPENTOGON updater may appear, or the game may close by itself. [b]Do not install anything the updater offers[/b] (it installs the Repentance+ version).
 [*]In the game folder, open [b]dsound.ini[/b] with Notepad and make sure it says [b]CheckForUpdates = 0[/b]. Save it.
-[*]Start the game again. When it works, the game window title reads [b]"The Binding of Isaac: Repentance (+ REPENTOGON 1.0.12e)"[/b].
+[*]Start the game again. When it works, the game window title reads [b]&quot;The Binding of Isaac: Repentance (+ REPENTOGON 1.0.12e)&quot;[/b].
 [*]Subscribe to this mod. Done.
 [/olist]
-If REPENTOGON is missing, the history page shows a red "Needs REPENTOGON 1.0.12e" next to its title.
+If REPENTOGON is missing, the history page shows a red &quot;Needs REPENTOGON 1.0.12e&quot; next to its title.
 To remove REPENTOGON later, delete [b]dsound.dll[/b] from the game folder.
 
 [h2]How to open the history[/h2]
 [list]
-[*]Main menu: press [b]F2[/b] on any screen, or open the Stats screen and pick the "Run History" note in the top right
+[*]Main menu: press [b]F2[/b] on any screen, or open the Stats screen and pick the &quot;Run History&quot; note in the top right
 [*]During a run: press [b]F2[/b] (change the key in rh_config.lua)
 [*]In the floor view, press [b]Space[/b] to browse items and see their names and pickup text
 [/list]
@@ -83,20 +83,20 @@ To remove REPENTOGON later, delete [b]dsound.dll[/b] from the game folder.
 
 [h2]REPENTOGON 1.0.12e 安装步骤[/h2]
 [olist]
-[*]打开 [url=https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e]REPENTOGON 1.0.12e 发布页[/url]，在"Assets"下面下载 [b]REPENTOGON.zip[/b]
+[*]打开 [url=https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e]REPENTOGON 1.0.12e 发布页[/url]，在&quot;Assets&quot;下面下载 [b]REPENTOGON.zip[/b]
 [*]打开游戏目录：在 Steam 库里右键《以撒的结合：重生》→ 管理 → 浏览本地文件，也就是有 [b]isaac-ng.exe[/b] 的那个文件夹
 [*]把 REPENTOGON.zip 里的[b]全部文件[/b]解压到这个文件夹；Windows 问是否替换时选替换
 [*]从 Steam 启动游戏。第一次启动时可能会弹出 REPENTOGON 的更新程序，或者游戏自己关掉。[b]不要安装更新程序提供的任何东西[/b]（它装的是忏悔+ 用的版本）
 [*]用记事本打开游戏目录里的 [b]dsound.ini[/b]，确认写的是 [b]CheckForUpdates = 0[/b]，保存
-[*]再启动游戏。装好后游戏窗口标题会显示 [b]"The Binding of Isaac: Repentance (+ REPENTOGON 1.0.12e)"[/b]
+[*]再启动游戏。装好后游戏窗口标题会显示 [b]&quot;The Binding of Isaac: Repentance (+ REPENTOGON 1.0.12e)&quot;[/b]
 [*]订阅本 mod，完成
 [/olist]
-没装好时，记录页面标题旁边会显示红字"需要 REPENTOGON 1.0.12e"。
+没装好时，记录页面标题旁边会显示红字&quot;需要 REPENTOGON 1.0.12e&quot;。
 以后想卸载 REPENTOGON：删掉游戏目录里的 [b]dsound.dll[/b] 即可。
 
 [h2]怎么打开记录[/h2]
 [list]
-[*]主菜单：任意界面按 [b]F2[/b]，或者进入"统计数据"选右上角的"对局记录"便签
+[*]主菜单：任意界面按 [b]F2[/b]，或者进入&quot;统计数据&quot;选右上角的&quot;对局记录&quot;便签
 [*]对局中：按 [b]F2[/b]（按键可在 rh_config.lua 里修改）
 [*]在楼层详情页按 [b]空格[/b] 逐个查看道具的官方名称和拾取说明
 [/list]
@@ -113,7 +113,7 @@ To remove REPENTOGON later, delete [b]dsound.dll[/b] from the game folder.
 [*]属性、主动和饰品只记录 1 号角色
 [*]贪婪模式只记录最后的究极贪婪，不记录每波的 Boss
 [/list]</description>
-    <version>1.7</version>
+    <version>1.8</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
