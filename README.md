@@ -53,11 +53,21 @@ A mod for *The Binding of Isaac: Repentance* that records your last 20 runs and 
 The Binding of Isaac Rebirth/mods/run history/
 ```
 
-## 适用版本
+## 适用版本与前置
 
-- 在 **Repentance v1.7.9b**（不含 Repentance+）上开发和测试。
-- 菜单入口在 **REPENTOGON 1.0.12e** 上测试，这是最后一个支持 v1.7.9b 的版本。
-- 没有在 Repentance+ 或更新版本的 REPENTOGON 上测试过。
+| 项目 | 是否需要 | 说明 |
+| --- | --- | --- |
+| 忏悔 DLC，游戏版本 v1.7.9b | **必需** | mod 就是为这个版本做的 |
+| 忏悔+ | 暂不支持 | 没有测试过 |
+| 胎衣+ 及更早版本（没有忏悔） | 不支持 | 用到了忏悔才有的内容 |
+| [REPENTOGON 1.0.12e](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e) | 可选 | 只用于主菜单"统计数据"里的入口 |
+| EID（External Item Descriptions） | 可选 | 只用于显示其他 mod 的敌人和 Boss 名字 |
+
+在 v1.7.9b 上安装 REPENTOGON：
+
+1. 新版 REPENTOGON 只支持忏悔+，要用旧版 1.0.12e：在[发布页](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e)下载 `REPENTOGON.zip`。
+2. 解压到游戏目录（有 `isaac-ng.exe` 的文件夹），从 Steam 启动游戏。
+3. 如果第一次启动时弹出更新程序或游戏自己关掉了，不要安装它提供的东西；打开游戏目录里的 `dsound.ini`，把 `CheckForUpdates` 改成 `0`，再启动。
 
 ## 设置
 
@@ -113,5 +123,6 @@ Records the last 20 runs per save slot: character, seed, result, time, final ite
 
 - Press `F2` during a run to open the history. In the floor view, press `Space` to browse items and see their names.
 - With [REPENTOGON](https://github.com/TeamREPENTOGON/REPENTOGON) installed, a "Run History" note also appears in the main menu's Stats screen.
-- Developed and tested on Repentance v1.7.9b with REPENTOGON 1.0.12e; not tested on Repentance+.
+- Requires the Repentance DLC, game v1.7.9b. Repentance+ is not supported yet (untested); Afterbirth+ and older are not supported.
+- Optional: [REPENTOGON 1.0.12e](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e) for the main-menu entry (newer REPENTOGON is Repentance+ only; if its updater appears on first launch, set `CheckForUpdates = 0` in `dsound.ini`), and EID for names of enemies from other mods.
 - Subscribe on the [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3838982654), or install by copying this folder to `mods/run history/` in the game directory. Settings are in `rh_config.lua`.

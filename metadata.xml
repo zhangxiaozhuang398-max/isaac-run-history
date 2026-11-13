@@ -6,6 +6,23 @@
     <description>[h1]Run History / 对局记录[/h1]
 Records your last 20 runs and shows them on a page styled like the game's own paper menus. (中文说明在下面)
 
+[h2]Requirements[/h2]
+[table]
+[tr][th]Item[/th][th]Needed?[/th][th]Notes[/th][/tr]
+[tr][td]Repentance DLC, game v1.7.9b[/td][td][b]Required[/b][/td][td]This is the version the mod is made for.[/td][/tr]
+[tr][td]Repentance+[/td][td]Not supported yet[/td][td]Not tested. It may partly work; please report problems.[/td][/tr]
+[tr][td]Afterbirth+ or older (no Repentance)[/td][td]Not supported[/td][td]The mod uses Repentance-only data.[/td][/tr]
+[tr][td]REPENTOGON [b]1.0.12e[/b][/td][td]Optional[/td][td]Only for the entry in the main menu's Stats screen. Without it, press F2 in a run.[/td][/tr]
+[tr][td]External Item Descriptions (EID)[/td][td]Optional[/td][td]Only used to show names of enemies and bosses added by other mods.[/td][/tr]
+[/table]
+
+[b]Installing REPENTOGON for v1.7.9b (optional)[/b]
+[list]
+[*]Newer REPENTOGON versions only work on Repentance+. On v1.7.9b you need the old [b]1.0.12e[/b]: [url=https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e]download REPENTOGON.zip from this page[/url].
+[*]Extract the zip into the game folder (the folder that has isaac-ng.exe), then start the game from Steam.
+[*]If an updater pops up or the game closes on the first start, don't install anything it offers. Open [b]dsound.ini[/b] in the game folder, set [b]CheckForUpdates = 0[/b], and start the game again.
+[/list]
+
 [h2]What it records[/h2]
 [b]Every run[/b]
 [list]
@@ -24,28 +41,38 @@ Records your last 20 runs and shows them on a page styled like the game's own pa
 [h2]How to open[/h2]
 [list]
 [*]During a run: press [b]F2[/b] (change it in rh_config.lua)
-[*]Main menu: with [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] installed, a &quot;Run History&quot; note appears in the Stats screen. Without REPENTOGON everything else still works.
-[*]In the floor view, press [b]Space[/b] to browse items and see their names and pickup text.
-[/list]
-
-[h2]Compatibility[/h2]
-[list]
-[*]Made and tested on [b]Repentance v1.7.9b[/b]. [b]Not tested on Repentance+.[/b]
-[*]The main-menu entry was tested with REPENTOGON 1.0.12e (the last version for v1.7.9b).
-[*]English and Chinese UI; other languages show English.
+[*]Main menu (needs REPENTOGON 1.0.12e): a &quot;Run History&quot; note appears in the Stats screen
+[*]In the floor view, press [b]Space[/b] to browse items and see their names and pickup text
 [/list]
 
 [h2]Notes[/h2]
 [list]
-[*]History is saved per save slot in data/run history/ and is not synced by Steam Cloud.
+[*]English and Chinese UI, following the game's language. Other languages show English.
+[*]History is saved per save slot in data/run history/ and is not synced by Steam Cloud. Runs played before you installed the mod can't be recorded.
 [*]Opening the page during a run stops your character, but enemies keep moving. Open it in a cleared room.
 [*]Stats, active items and trinkets are recorded for player 1 only.
 [*]Greed mode records only the final Ultra Greed, not the wave bosses.
-[*]Enemies from other mods have no portrait; their names need External Item Descriptions.
 [/list]
 
 [h1]对局记录[/h1]
 自动记录最近 20 局对局，用游戏自己的纸张菜单风格显示。
+
+[h2]适用版本与前置[/h2]
+[table]
+[tr][th]项目[/th][th]是否需要[/th][th]说明[/th][/tr]
+[tr][td]忏悔 DLC，游戏版本 v1.7.9b[/td][td][b]必需[/b][/td][td]mod 就是为这个版本做的[/td][/tr]
+[tr][td]忏悔+[/td][td]暂不支持[/td][td]没有测试过，可能部分功能能用，遇到问题欢迎反馈[/td][/tr]
+[tr][td]胎衣+ 及更早版本（没有忏悔）[/td][td]不支持[/td][td]mod 用到了忏悔才有的内容[/td][/tr]
+[tr][td]REPENTOGON [b]1.0.12e[/b][/td][td]可选[/td][td]只用于主菜单&quot;统计数据&quot;里的入口；不装的话在对局中按 F2 打开[/td][/tr]
+[tr][td]EID（External Item Descriptions）[/td][td]可选[/td][td]只用于显示其他 mod 加入的敌人和 Boss 的名字[/td][/tr]
+[/table]
+
+[b]在 v1.7.9b 上安装 REPENTOGON（可选）[/b]
+[list]
+[*]新版 REPENTOGON 只支持忏悔+，v1.7.9b 要用旧版 [b]1.0.12e[/b]：[url=https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e]在这个页面下载 REPENTOGON.zip[/url]
+[*]把压缩包解压到游戏目录（有 isaac-ng.exe 的那个文件夹），然后从 Steam 启动游戏
+[*]如果第一次启动时弹出更新程序或者游戏自己关掉了，不要安装它提供的任何东西。打开游戏目录里的 [b]dsound.ini[/b]，把 [b]CheckForUpdates[/b] 改成 [b]0[/b]，再启动游戏
+[/list]
 
 [h2]记录内容[/h2]
 [b]每局[/b]：角色、种子、难度、结果（胜利 / 死亡 / 放弃）、用时；最终道具、最后的主动道具和饰品、最终属性；最后击败的 Boss；死因（敌人或 Boss 的死亡画面头像，或尖刺、诅咒房门、自伤等）。
@@ -54,25 +81,19 @@ Records your last 20 runs and shows them on a page styled like the game's own pa
 [h2]怎么打开[/h2]
 [list]
 [*]对局中按 [b]F2[/b]（可在 rh_config.lua 里修改）
-[*]装有 [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] 时，主菜单&quot;统计数据&quot;里会多出一张&quot;对局记录&quot;便签；没装也不影响其他功能
+[*]主菜单（需要 REPENTOGON 1.0.12e）：&quot;统计数据&quot;里会多出一张&quot;对局记录&quot;便签
 [*]在楼层详情页按 [b]空格[/b] 逐个查看道具的官方名称和拾取说明
-[/list]
-
-[h2]适用版本[/h2]
-[list]
-[*]在 [b]忏悔 v1.7.9b[/b] 上开发和测试，[b]没有在忏悔+ 上测试过[/b]
-[*]菜单入口在 REPENTOGON 1.0.12e（支持 v1.7.9b 的最后一个版本）上测试
 [/list]
 
 [h2]说明[/h2]
 [list]
-[*]记录按存档槽分开保存在 data/run history/，不走 Steam 云同步
+[*]界面有中文和英文，跟随游戏语言；其他语言显示英文
+[*]记录按存档槽分开保存在 data/run history/，不走 Steam 云同步；安装 mod 之前打的对局无法记录
 [*]对局内打开页面时角色不会动，但敌人不会暂停，建议在清完的房间里看
 [*]属性、主动和饰品只记录 1 号角色
 [*]贪婪模式只记录最后的究极贪婪，不记录每波的 Boss
-[*]其他 mod 加的敌人没有头像，名字需要装 EID 才能显示
 [/list]</description>
-    <version>1.6</version>
+    <version>1.7</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
