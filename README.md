@@ -25,27 +25,32 @@ A mod for *The Binding of Isaac: Repentance* that records your last 20 runs and 
 
 记录按存档槽分开保存，每个存档最多保留 20 局。
 
-## 怎么打开
+## 必须安装：REPENTOGON 1.0.12e
 
-| 位置 | 操作 | 需要 |
+| 项目 | 是否需要 | 说明 |
 | --- | --- | --- |
-| 对局中 | 按 `F2` | 无 |
-| 主菜单 → 统计数据 | 选中右上角的"对局记录"便签，按确认 | [REPENTOGON](https://github.com/TeamREPENTOGON/REPENTOGON) |
+| 忏悔 DLC，游戏版本 v1.7.9b | **必需** | mod 就是为这个版本做的 |
+| [REPENTOGON 1.0.12e](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e)（必须是这个版本） | **必需** | 更新的 REPENTOGON 只支持忏悔+，在这里用不了 |
+| 忏悔+ | 不支持 | 没有测试过 |
+| 胎衣+ 及更早版本 | 不支持 | 需要忏悔 |
+| EID（External Item Descriptions） | 可选 | 只用于显示其他 mod 加入的敌人和 Boss 的名字 |
 
-原版游戏的 mod 接口在主菜单里不运行，所以菜单入口只有装了 REPENTOGON 才会出现；没装时 mod 的其余功能不受影响。
+**不要用创意工坊里的 REPENTOGON。** 那是最新版，只支持忏悔+，而且订阅并不会安装它。1.0.12e 只能在 GitHub 下载。
 
-页面内的操作：
+### REPENTOGON 1.0.12e 安装步骤
 
-- `↑` `↓` 选择对局 / 滚动楼层
-- `空格` 查看详情；在详情页再按 `空格` 进入道具选择，用方向键逐个查看道具的官方名称和拾取说明
-- `←` `→` 在详情页切换对局
-- 主菜单里 `ESC` 返回；对局内用 `退格键` 返回、`F2` 关闭（对局内按 ESC 会暂停游戏）
+1. 打开 [REPENTOGON 1.0.12e 发布页](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e)，在"Assets"下面下载 `REPENTOGON.zip`。
+2. 打开游戏目录：在 Steam 库里右键《以撒的结合：重生》→ 管理 → 浏览本地文件，也就是有 `isaac-ng.exe` 的那个文件夹。
+3. 把 `REPENTOGON.zip` 里的**全部文件**解压到这个文件夹；Windows 问是否替换时选替换。
+4. 从 Steam 启动游戏。第一次启动时可能会弹出 REPENTOGON 的更新程序，或者游戏自己关掉。**不要安装更新程序提供的任何东西**（它装的是忏悔+ 用的版本）。
+5. 用记事本打开游戏目录里的 `dsound.ini`，确认写的是 `CheckForUpdates = 0`，保存。
+6. 再启动游戏。装好后游戏窗口标题会显示 `The Binding of Isaac: Repentance (+ REPENTOGON 1.0.12e)`。
 
-对局内打开页面时角色不会移动或射击，但敌人不会暂停，建议在清完的房间里看。
+没装好时，记录页面标题旁边会显示红字"需要 REPENTOGON 1.0.12e"。以后想卸载 REPENTOGON，删掉游戏目录里的 `dsound.dll` 即可。
 
-## 安装
+## 安装本 mod
 
-在 Steam 创意工坊订阅：<https://steamcommunity.com/sharedfiles/filedetails/?id=3838982654>
+先装好 REPENTOGON 1.0.12e，然后在 Steam 创意工坊订阅：<https://steamcommunity.com/sharedfiles/filedetails/?id=3838982654>
 
 或者手动安装：把整个文件夹放进游戏目录的 `mods` 文件夹，文件夹名保持为 `run history`：
 
@@ -53,21 +58,21 @@ A mod for *The Binding of Isaac: Repentance* that records your last 20 runs and 
 The Binding of Isaac Rebirth/mods/run history/
 ```
 
-## 适用版本与前置
+## 怎么打开
 
-| 项目 | 是否需要 | 说明 |
-| --- | --- | --- |
-| 忏悔 DLC，游戏版本 v1.7.9b | **必需** | mod 就是为这个版本做的 |
-| 忏悔+ | 暂不支持 | 没有测试过 |
-| 胎衣+ 及更早版本（没有忏悔） | 不支持 | 用到了忏悔才有的内容 |
-| [REPENTOGON 1.0.12e](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e) | 可选 | 只用于主菜单"统计数据"里的入口 |
-| EID（External Item Descriptions） | 可选 | 只用于显示其他 mod 的敌人和 Boss 名字 |
+| 位置 | 操作 |
+| --- | --- |
+| 主菜单 | 任意界面按 `F2`；或进入"统计数据"，选中右上角的"对局记录"便签按确认 |
+| 对局中 | 按 `F2` |
 
-在 v1.7.9b 上安装 REPENTOGON：
+页面内的操作：
 
-1. 新版 REPENTOGON 只支持忏悔+，要用旧版 1.0.12e：在[发布页](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e)下载 `REPENTOGON.zip`。
-2. 解压到游戏目录（有 `isaac-ng.exe` 的文件夹），从 Steam 启动游戏。
-3. 如果第一次启动时弹出更新程序或游戏自己关掉了，不要安装它提供的东西；打开游戏目录里的 `dsound.ini`，把 `CheckForUpdates` 改成 `0`，再启动。
+- `↑` `↓` 选择对局 / 滚动楼层
+- `空格` 查看详情；在详情页再按 `空格` 进入道具选择，用方向键逐个查看道具的官方名称和拾取说明
+- `←` `→` 在详情页切换对局
+- 主菜单里 `ESC` 返回、`F2` 关闭；对局内用 `退格键` 返回、`F2` 关闭（对局内按 ESC 会暂停游戏）
+
+对局内打开页面时角色不会移动或射击，但敌人不会暂停，建议在清完的房间里看。
 
 ## 设置
 
@@ -75,7 +80,7 @@ The Binding of Isaac Rebirth/mods/run history/
 
 | 选项 | 默认值 | 说明 |
 | --- | --- | --- |
-| `ToggleKey` | `Keyboard.KEY_F2` | 对局内打开 / 关闭页面的按键 |
+| `ToggleKey` | `Keyboard.KEY_F2` | 打开 / 关闭页面的按键（主菜单和对局内都用它） |
 | `MaxRuns` | `20` | 最多保留多少局 |
 | `Language` | `"auto"` | `"auto"` 跟随游戏语言，或 `"zh"` / `"en"` |
 | `SkipQuickRestarts` | `true` | 没打完第一层就重开的对局不记录 |
@@ -86,7 +91,6 @@ The Binding of Isaac Rebirth/mods/run history/
 ## 已知限制
 
 - 道具数量超过一屏能放下的格数时，多出来的道具显示为 "+N"，无法选中查看名字。
-- 没装 REPENTOGON 时，游戏不向 mod 提供系统时间，对局日期为空。
 - 贪婪模式不记录每层的波次 Boss，只记录最后的究极贪婪。
 - 用手柄时，按键提示仍然显示键盘按键。
 - 旧版本 mod 记录的对局缺少后来才加入的数据（属性、每层用时、金币、死因、主动和饰品等），对应位置显示为空。
@@ -108,7 +112,7 @@ The Binding of Isaac Rebirth/data/run history/save1.dat
 | --- | --- |
 | `main.lua` | 记录逻辑 |
 | `rh_ui.lua` | 页面绘制和对局内的按键处理 |
-| `rh_menu.lua` | 主菜单"统计数据"里的入口（REPENTOGON） |
+| `rh_menu.lua` | 主菜单里的入口：F2 和"统计数据"里的便签（REPENTOGON） |
 | `rh_names.lua` | 楼层名和界面文字 |
 | `rh_names_data.lua` | 道具 / 角色 / Boss 的官方中英文名（由游戏本地化文件生成） |
 | `rh_boss_icons.lua` | Boss 小图标对照表（自动生成） |
@@ -121,8 +125,22 @@ The Binding of Isaac Rebirth/data/run history/save1.dat
 
 Records the last 20 runs per save slot: character, seed, result, time, final items and stats, the active items and trinkets you ended with, what killed you, and for every floor the items picked up, bosses defeated, time spent, coins / bombs / keys when leaving, and whether a devil or angel room appeared and was entered.
 
-- Press `F2` during a run to open the history. In the floor view, press `Space` to browse items and see their names.
-- With [REPENTOGON](https://github.com/TeamREPENTOGON/REPENTOGON) installed, a "Run History" note also appears in the main menu's Stats screen.
-- Requires the Repentance DLC, game v1.7.9b. Repentance+ is not supported yet (untested); Afterbirth+ and older are not supported.
-- Optional: [REPENTOGON 1.0.12e](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e) for the main-menu entry (newer REPENTOGON is Repentance+ only; if its updater appears on first launch, set `CheckForUpdates = 0` in `dsound.ini`), and EID for names of enemies from other mods.
-- Subscribe on the [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3838982654), or install by copying this folder to `mods/run history/` in the game directory. Settings are in `rh_config.lua`.
+**Requirements**
+
+- The Repentance DLC, game **v1.7.9b**. Repentance+ and Afterbirth+ or older are not supported.
+- **[REPENTOGON 1.0.12e](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e) (required, exactly this version).** Newer REPENTOGON versions, including the one on the Steam Workshop, are for Repentance+ only.
+- Optional: EID, for names of enemies from other mods.
+
+**Installing REPENTOGON 1.0.12e**
+
+1. Download `REPENTOGON.zip` from the [1.0.12e release page](https://github.com/TeamREPENTOGON/REPENTOGON/releases/tag/1.0.12e) (under "Assets").
+2. Open the game folder (Steam Library → right-click the game → Manage → Browse local files; it contains `isaac-ng.exe`) and extract everything from the zip into it, replacing files.
+3. Start the game. If a REPENTOGON updater appears or the game closes, don't install anything it offers. Open `dsound.ini` in the game folder, make sure it says `CheckForUpdates = 0`, and start the game again.
+4. When it works, the window title reads `The Binding of Isaac: Repentance (+ REPENTOGON 1.0.12e)`. To remove REPENTOGON, delete `dsound.dll`.
+
+**Using the mod**
+
+- Subscribe on the [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3838982654), or copy this folder to `mods/run history/` in the game directory.
+- Press `F2` in the main menu or during a run, or pick the "Run History" note in the Stats screen. In the floor view, press `Space` to browse items and see their names.
+- If REPENTOGON is missing, the page shows a red "Needs REPENTOGON 1.0.12e" next to its title.
+- Settings are in `rh_config.lua`.

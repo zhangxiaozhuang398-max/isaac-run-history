@@ -49,7 +49,14 @@ local MASK_NOTE = ALL_INPUTS & ~bits(
 -- 页面打开时：只保留全屏和静音
 local MASK_PAGE = bits(ButtonAction.ACTION_FULLSCREEN, ButtonAction.ACTION_MUTE)
 
+-- 不响应 F2 的菜单：标题画面、选存档（还没读入存档槽），以及改键界面（F2 可能正被绑定成按键）
+local NO_HOTKEY = {}
+for _, name in ipairs({ "TITLE", "SAVES", "KEYCONFIG" }) do
+	if MainMenuType[name] ~= nil then NO_HOTKEY[MainMenuType[name]] = true end
+end
+
 local state = {
+	free = false, -- 页面是在统计菜单以外用 F2 打开的（画在屏幕中央）
 	selected = false, -- 便签是否被选中
 	prevElement = nil, -- 上一帧统计菜单选中的项
 	cooldown = 0, -- 打开/关闭页面后的几帧里继续屏蔽输入，防止同一次按键被原菜单再处理一遍
@@ -166,12 +173,52 @@ end
 -- 回调
 ----------------------------------------------------------------------
 
+local function hotkeyTriggered()
+	local key = mod.Config.ToggleKey
+	return key ~= nil and Input.IsButtonTriggered(key, 0)
+end
+
 function Menu.OnRender()
 	local active = MenuManager.GetActiveMenu()
 	local secrets = StatsMenu.IsSecretsMenuVisible()
 
+	devices = deviceCount()
+	if state.cooldown > 0 then state.cooldown = state.cooldown - 1 end
+
+	-- F2：在主菜单的任意界面直接打开 / 关闭页面
+	local pageOpen = UI.open and UI.mode == "menu"
+	if state.cooldown == 0 and hotkeyTriggered() then
+		if pageOpen then
+			UI.Close()
+			state.cooldown = 12
+		elseif not NO_HOTKEY[active] then
+			mod:LoadHistory()
+			UI.Open("menu")
+			state.free = (active ~= STATS) or secrets
+			state.cooldown = 10
+			pageOpen = true
+		end
+	end
+	if not pageOpen then state.free = false end
+
+	-- 统计菜单以外打开的页面：压暗屏幕，画在屏幕中央
+	if pageOpen and state.free then
+		local W, H = Isaac.GetScreenWidth(), Isaac.GetScreenHeight()
+		UI.Dim(W, H)
+		local wasClosing = UI.closing
+		UI.Frame((W - 480) / 2, (H - 270) / 2, menuInput)
+		if (UI.closing and not wasClosing) or not UI.open then
+			state.cooldown = 12
+		end
+		setMask(MASK_PAGE)
+		return
+	end
+
 	if active ~= STATS or secrets then
-		if state.selected or state.mask ~= ALL_INPUTS or state.cursorHidden or (UI.open and UI.mode == "menu") then
+		if state.cooldown > 0 then
+			-- 刚关掉页面：再屏蔽几帧，免得关页面的那次按键被原菜单当成"返回"
+			setMask(MASK_PAGE)
+		elseif state.selected or state.mask ~= ALL_INPUTS or state.cursorHidden or (UI.open and UI.mode == "menu") then
 			reset()
 		end
 		state.prevElement = nil
@@ -186,12 +233,9 @@ function Menu.OnRender()
 		mod:LoadHistory()
 	end
 
-	devices = deviceCount()
-	if state.cooldown > 0 then state.cooldown = state.cooldown - 1 end
 	if state.hold > 0 then state.hold = state.hold - 1 end
 
 	local element = StatsMenu.GetSelectedElement()
-	local pageOpen = UI.open and UI.mode == "menu"
 
 	if not pageOpen then
 		local up, down = triggered(ACTIONS.up), triggered(ACTIONS.down)
@@ -258,6 +302,7 @@ end
 
 -- 进入对局时恢复原菜单的状态
 mod:AddCallback(ModCallbacks.MC_POST_GAME_STARTED, function()
+	state.free = false
 	state.selected = false
 	state.prevElement = nil
 	state.cooldown = 0

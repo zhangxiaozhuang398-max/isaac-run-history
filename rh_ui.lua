@@ -628,6 +628,12 @@ local function drawList(entries)
 	textRight(Small, string.format("%d / %d", #mod.Data.runs, maxRuns), X1, Y0 + 5, FADED)
 	rule(X0, Y0 + 21, X1 - X0)
 	drawHints(hintsFor("list"), X1, HINT_Y)
+	-- 没装 REPENTOGON 时在标题旁边提醒（安装方法见创意工坊页面 / README）
+	if REPENTOGON == nil then
+		local countW = textWidth(Small, string.format("%d / %d", #mod.Data.runs, maxRuns))
+		local nx = X0 + textWidth(Big, T("title")) + 12
+		text(Small, fit(Small, T("needRepentogon"), X1 - countW - 10 - nx), nx, Y0 + 5, RED)
+	end
 
 	local top = Y0 + 26
 	if #entries == 0 then
@@ -1084,6 +1090,12 @@ function UI.ForceClose()
 	UI.itemMode = false
 	UI.closing = false
 	UI.anim = 0
+end
+
+-- 压暗整个屏幕（主菜单里居中打开页面时用）
+function UI.Dim(width, height)
+	OX, OY = 0, 0
+	rect(0, 0, width, height, 0, 0, 0, 0.5 * UI.anim)
 end
 
 function UI.Toggle()
