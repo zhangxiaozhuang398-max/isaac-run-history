@@ -45,7 +45,9 @@ A mod for *The Binding of Isaac: Repentance* that records your last 20 runs and 
 
 ## 安装
 
-把整个文件夹放进游戏目录的 `mods` 文件夹，文件夹名保持为 `run history`：
+在 Steam 创意工坊订阅：<https://steamcommunity.com/sharedfiles/filedetails/?id=3838982654>
+
+或者手动安装：把整个文件夹放进游戏目录的 `mods` 文件夹，文件夹名保持为 `run history`：
 
 ```
 The Binding of Isaac Rebirth/mods/run history/
@@ -112,4 +114,4 @@ Records the last 20 runs per save slot: character, seed, result, time, final ite
 - Press `F2` during a run to open the history. In the floor view, press `Space` to browse items and see their names.
 - With [REPENTOGON](https://github.com/TeamREPENTOGON/REPENTOGON) installed, a "Run History" note also appears in the main menu's Stats screen.
 - Developed and tested on Repentance v1.7.9b with REPENTOGON 1.0.12e; not tested on Repentance+.
-- Install by copying this folder to `mods/run history/` in the game directory. Settings are in `rh_config.lua`.
+- Subscribe on the [Steam Workshop](https://steamcommunity.com/sharedfiles/filedetails/?id=3838982654), or install by copying this folder to `mods/run history/` in the game directory. Settings are in `rh_config.lua`.

@@ -2,6 +2,7 @@
 <metadata>
     <name>Run History</name>
     <directory>run history</directory>
+    <id>3838982654</id>
     <description>[h1]Run History / 对局记录[/h1]
 Records your last 20 runs and shows them on a page styled like the game's own paper menus. (中文说明在下面)
 
@@ -23,7 +24,7 @@ Records your last 20 runs and shows them on a page styled like the game's own pa
 [h2]How to open[/h2]
 [list]
 [*]During a run: press [b]F2[/b] (change it in rh_config.lua)
-[*]Main menu: with [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] installed, a "Run History" note appears in the Stats screen. Without REPENTOGON everything else still works.
+[*]Main menu: with [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] installed, a &quot;Run History&quot; note appears in the Stats screen. Without REPENTOGON everything else still works.
 [*]In the floor view, press [b]Space[/b] to browse items and see their names and pickup text.
 [/list]
 
@@ -53,7 +54,7 @@ Records your last 20 runs and shows them on a page styled like the game's own pa
 [h2]怎么打开[/h2]
 [list]
 [*]对局中按 [b]F2[/b]（可在 rh_config.lua 里修改）
-[*]装有 [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] 时，主菜单"统计数据"里会多出一张"对局记录"便签；没装也不影响其他功能
+[*]装有 [url=https://github.com/TeamREPENTOGON/REPENTOGON]REPENTOGON[/url] 时，主菜单&quot;统计数据&quot;里会多出一张&quot;对局记录&quot;便签；没装也不影响其他功能
 [*]在楼层详情页按 [b]空格[/b] 逐个查看道具的官方名称和拾取说明
 [/list]
 
@@ -71,7 +72,7 @@ Records your last 20 runs and shows them on a page styled like the game's own pa
 [*]贪婪模式只记录最后的究极贪婪，不记录每波的 Boss
 [*]其他 mod 加的敌人没有头像，名字需要装 EID 才能显示
 [/list]</description>
-    <version>1.5</version>
+    <version>1.6</version>
     <visibility>Public</visibility>
     <tag id="Lua"/>
     <tag id="Tweaks"/>
